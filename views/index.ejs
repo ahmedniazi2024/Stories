@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BlogHub</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css"> 
+</head>
+<body>
+    <%- include('header') %>
+
+    <div class="container mt-5">
+        <h1>Welcome to BlogHub</h1>
+    </div>
+
+    <div id="body">
+        <div id="content">
+            <div class="button-container">
+                <h2 class="unlock-stories"><span class="stories">Unlock the Stories</span><br> Behind Every Click!</h2>
+                <div id="quote">
+                    <p>Step into a world of endless possibilities,<br>
+                    Where every click sparks a new adventure,<br>
+                    And every tale fuels your imagination.</p>
+                </div>
+                <button type="button" class="btn btn-establish-blog" id="readAllBlogsBtn">Read All Blogs</button>
+                <a type="button" href="/create" class="btn btn-establish-blog ml-3" id="establishBlogBtn">Establish a Blog</a>
+            </div>
+        </div>
+        <div id="image-container">
+            <img id="image"  src="https://theblogpilot.com/wp-content/uploads/2020/11/how-to-start-a-blog.jpg" alt="Hero Image">
+        </div>
+    </div>
+    
+    <section>
+        <div > 
+            <h2  id="featured">Featured Blogs</h2>
+        </div>
+        <div id="mainNature">
+            <div class="nature">
+                <h3 class="natureHeading">Nature</h3>
+                <img class="natureImage" src="https://static.vecteezy.com/system/resources/thumbnails/024/495/391/small_2x/earth-day-and-world-environment-day-spring-beautiful-natural-verdant-green-forest-in-summer-generate-ai-free-photo.jpg">
+                <p class="natureContent">Nature's beauty lies in its diverse landscapes, vibrant flora and fauna, and serene environments, offering a peaceful retreat from modern life's hustle.</p>
+                <a href="/nature" class="btn btn-dark" id="readButton">Read</a>
+            </div>
+            
+            <div class="nature">
+                <h3 class="natureHeading">Exotic Cars</h3>
+                <img class="natureImage"  src="https://coolmaterial.com/wp-content/uploads/2020/05/Marcel-Petitjean-Entire-Collection-Exotic-Cars.jpg">
+                <p class="natureContent">Exotic cars epitomize luxury, speed, and innovation, with stunning designs and advanced technology, making them the ultimate status symbol for car enthusiasts.</p>
+                <a href="/cars" class="btn btn-dark" id="readButton">Read</a>
+            </div>
+            <div class="nature">
+                <h3 class="natureHeading">Artificial Intelligence</h3>
+                <img class="natureImage"  src="https://img.freepik.com/free-photo/ai-technology-microchip-background-digital-transformation-concept_53876-124669.jpg">
+                <p class="natureContent">Artificial Intelligence revolutionizes industries with advanced algorithms and machine learning, enhancing efficiency, decision-making, and innovation across various sectors.</p>
+                <a href="/ai" class="btn btn-dark" id="readButton">Read</a>
+            </div>
+            <div class="nature">
+                <h3 class="natureHeading">Gaming Industry</h3>
+                <img class="natureImage"  src="https://t3.ftcdn.net/jpg/04/13/99/08/360_F_413990886_hChS8igRgaOC4IlkIFIxiQ2EeW5U8LKf.jpg">
+                <p class="natureContent">The gaming industry thrives with cutting-edge technology and immersive experiences, captivating millions globally through dynamic storytelling and interactive entertainment.</p>
+                <a href="/gaming" class="btn btn-dark" id="readButton">Read</a>
+            </div>
+        </div>  
+    </section>
+    <section>
+        <h2 id="empowerBlogs">Empower Your Blogging</h2>
+        <div class="patterns">
+            <article class="designs" id="exploreBlogs">
+                <img class="designImages" id="exploreImages" src="https://media.licdn.com/dms/image/C4D12AQGrq6JChKPDSQ/article-cover_image-shrink_600_2000/0/1651236741015?e=2147483647&v=beta&t=bUo6JuezBLzEmEwp9kfB4f2jFDCS382-knl_cKcoziA" alt="Explore Image">
+                <div id="headingContent">
+                    <h2 id="exploreHeading" class="exploreContent">Explore Endless Blogs</h2>
+                    <p class="exploreContent">Dive into a vast collection of diverse blogs covering a wide range of topics. Our platform brings together a myriad of voices and perspectives, offering a rich tapestry of content to explore. Whether you're interested in technology, travel, food, fashion, personal development, or niche hobbies, there's something for everyone. Discover new ideas, gain unique insights, and immerse yourself in stories from around the world. With our intuitive search and recommendation features, finding blogs that match your interests has never been easier.</p>
+                </div>
+            </article>
+    
+            <article class="designs" id="postBlogs">
+                <div id="headingContent">
+                    <h2 id="postHeading">Post Blogs Swiftly</h2>
+                    <p id="postpara">Effortlessly publish your blogs with speed and efficiency. Our platform streamlines the process, allowing you to share your thoughts and insights with your audience without delay. Enjoy a user-friendly interface that simplifies content creation, formatting, and publishing. Utilize our built-in editing tools, customizable templates, and multimedia integration to enhance your blog posts. Whether you’re a seasoned blogger or just starting, our platform provides all the tools you need to get your content online quickly and professionally.</p>
+                </div>
+                <img class="designImages" id="postImages" src="https://www.travelpayouts.com/blog/wp-content/uploads/2021/02/blog-images.png" alt="Post Image">
+            </article>
+    
+            <article class="designs" id="monetizeBlos">
+                <img class="designImages" id="monetizeImages" src="https://www.ryrob.com/wp-content/uploads/2019/09/How-to-Start-a-Blog-and-Make-Money-in-2020-Free-Easy-Guide-to-Start-Blogging.jpg" alt="Monetize Image">
+                <div id="headingContent">
+                    <h2 id="monetizeHeading">Monetize Your Passion</h2>
+                    <p id="monetizepara">Turn your passion for blogging into a sustainable income stream. Utilize our tools and resources to attract advertisers, engage readers, and generate income from your creative content. Our platform offers various monetization options including ad placements, sponsored posts, affiliate marketing, and premium content subscriptions. Track your earnings and performance with our detailed analytics dashboard, and access tips and strategies from successful bloggers to maximize your revenue potential. Transform your hobby into a thriving business with our comprehensive monetization features.</p>
+                </div>
+            </article>
+    
+            <article class="designs" id="promoteBlogs">
+                <div id="headingContent">
+                    <h2 id="promoteHeading">Promote Your Blog</h2>
+                    <p id="promotepara">Boost your blog's visibility and reach a wider audience. Implement effective marketing strategies and leverage social media to attract more readers and grow your blog’s following. Our platform provides integrated SEO tools to help your content rank higher in search results, as well as social media integration for easy sharing across various platforms. Participate in our community forums and collaboration opportunities to network with other bloggers, exchange ideas, and cross-promote your content. With our promotional tools, you can ensure your blog stands out and attracts the attention it deserves.</p>
+                </div>
+                <img class="designImages" id="promoteImages" src="https://api.backlinko.com/app/uploads/2020/02/promote-your-blog-post-banner.png" alt="Promote Image">
+            </article>
+        </div> 
+    </section>
+    
+    <%- include('footer') %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('establishBlogBtn').addEventListener('click', function() {
+                window.location.href = '/create'; // Corrected route path to '/create'
+            });
+    
+            document.getElementById('readAllBlogsBtn').addEventListener('click', function() {
+            window.location.href = '/blogs';
+        });
+    
+            document.getElementById('content').classList.add('loaded');
+        });
+
+        
+    </script>
+    
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5DXXZQK"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+</body>
+</html>
