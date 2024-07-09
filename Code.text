@@ -1,0 +1,336 @@
+
+INDEX.JS:
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const jwt = require('jsonwebtoken');
+const ejs = require('ejs');
+const cookieParser = require('cookie-parser');
+
+const app = express();
+const port = 3000;
+
+let submittedBlogs = [];
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.set('view engine', 'ejs');
+const viewsPath = path.join(__dirname, 'views');
+app.set('views', viewsPath);
+app.use(express.static(path.join(__dirname, 'public')));
+
+const secretKey = 'your-secret-key';
+
+const validUser = {
+    email: 'admin@gmail.com',
+    password: 'admin1234'
+};
+
+
+const generateToken = (user) => {
+    return jwt.sign(user, secretKey, { expiresIn: '1h' });
+};
+
+
+const verifyToken = (req, res, next) => {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        req.loggedIn = false;
+        next();
+    } else {
+        jwt.verify(token, secretKey, (err, decoded) => {
+            if (err) {
+                req.loggedIn = false; 
+            } else {
+                req.loggedIn = true;
+                req.user = decoded;
+            }
+            next();
+        });
+    }
+};
+
+// Routes for rendering pages
+app.get('/index', verifyToken, (req, res) => {
+    res.render('index', { loggedIn: req.loggedIn }); 
+});
+
+app.get('/features', verifyToken, (req, res) => {
+    res.render('features', { loggedIn: req.loggedIn }); 
+});
+
+app.get('/about', verifyToken, (req, res) => {
+    res.render('about', { loggedIn: req.loggedIn }); 
+});
+
+
+app.get('/login', (req, res) => {
+    res.render('login', { loggedIn: req.loggedIn });
+});
+
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (email === validUser.email && password === validUser.password) {
+        const token = generateToken({ email });
+        res.cookie('jwt', token, { httpOnly: true });
+        res.status(200).json({ message: 'Login successful' });
+    } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+    }
+});
+
+
+app.get('/logout', (req, res) => {
+    res.clearCookie('jwt');
+    res.redirect('/login');
+});
+
+
+app.get('/create', verifyToken, (req, res) => {
+    if (!req.loggedIn) {
+        return res.redirect('/login');
+    }
+    res.render('create', { loggedIn: req.loggedIn });
+});
+
+app.post('/submit-blog', verifyToken, (req, res) => {
+    const { title, overview, image, content } = req.body;
+    const newBlog = {
+        id: submittedBlogs.length + 1,
+        title,
+        overview,
+        image,
+        content,
+        date: new Date()
+    };
+    
+    submittedBlogs.push(newBlog);
+
+    res.status(200).json({ message: 'Blog submitted successfully' });
+});
+
+
+app.get('/blog/:id', verifyToken, (req, res) => {
+    const blogId = parseInt(req.params.id);
+    const blog = submittedBlogs.find(blog => blog.id === blogId);
+    if (blog) {
+        res.render('blogDetail', { blog, loggedIn: req.loggedIn });
+    } else {
+        res.status(404).send('Blog not found');
+    }
+});
+
+
+app.delete('/delete-blog/:id', verifyToken, (req, res) => {
+    if (!req.loggedIn) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const blogId = parseInt(req.params.id);
+    const blogIndex = submittedBlogs.findIndex(blog => blog.id === blogId);
+
+    if (blogIndex !== -1) {
+        submittedBlogs.splice(blogIndex, 1);
+        res.status(200).json({ message: 'Blog deleted successfully' });
+    } else {
+        res.status(404).json({ message: 'Blog not found' });
+    }
+});
+
+app.get('/blogs', verifyToken, (req, res) => {
+    res.render('blogs', { blogs: submittedBlogs, loggedIn: req.loggedIn }); 
+});
+
+app.get('/nature', verifyToken, (req, res) => {
+    res.render('nature', { loggedIn: req.loggedIn }); 
+});
+
+app.get('/cars', verifyToken, (req, res) => {
+    res.render('cars', { loggedIn: req.loggedIn });
+});
+
+app.get('/ai', verifyToken, (req, res) => {
+    res.render('ai', { loggedIn: req.loggedIn }); 
+});
+
+app.get('/gaming', verifyToken, (req, res) => {
+    res.render('gaming', { loggedIn: req.loggedIn }); 
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+
+
+
+
+
+
+
+
+LOGIN.EJS:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Other CSS or local stylesheets -->
+</head>
+<body>
+
+    <%- include('header')%>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2>Login</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" autocomplete="off" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('footer')%>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loginForm = document.getElementById("loginForm");
+
+            loginForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(loginForm);
+                const data = {
+                    email: formData.get('email'),
+                    password: formData.get('password')
+                };
+
+                fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Login failed');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message === 'Login successful') {
+                        window.location.href = "/create"; // Redirect to create page on successful login
+                    } else {
+                        alert(data.message); // Show error message
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+HEADER.EJS:
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+
+<body>
+<header class="bg-light border-bottom mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light container">
+        <a class="navbar-brand d-flex align-items-center" href="/index">
+            <i class="fas fa-blog" style="color: #74C0FC; font-size: 1.5rem;"></i>
+            <span class="ml-2 fs-4">BlogHub</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About Us</a>
+                </li>
+                <% if (loggedIn) { %>
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link px-2 text-body-secondary">Logout</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link px-2 text-body-secondary">Login</a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+        <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5DXXZQK');</script>
+    <!-- End Google Tag Manager -->
+    </header>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+
+
+
+

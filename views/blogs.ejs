@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Blogs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body class="body-style">
+
+    <%- include('header') %>
+
+    <div class="container mt-5">
+        <h1 id="allBlogsHeading" class="main-heading">All Blogs</h1>
+        <div class="row blogs-section">
+            <% blogs.forEach((blog, index) => { %>
+                <div class="col-md-6 mb-4">
+                    <div class="card blog-card">
+                        <img src="<%= blog.image %>" class="card-img-top blog-image" alt="Blog Image">
+                        <div class="card-body">
+                            <h5 class="card-title blog-title"><%= blog.title %></h5>
+                            <p class="card-text blog-overview"><%= blog.overview %></p>
+                            <a href="/blog/<%= blog.id %>" class="btn btn-dark">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <%- include('footer') %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#blogForm').submit(function(e) {
+                e.preventDefault();
+                var title = $('#title').val();
+                var overview = $('#overview').val();
+                var image = $('#image').val();
+                var content = $('#blog').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/submit-blog',
+                    data: JSON.stringify({ title: title, overview: overview, image: image, content: content }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        alert(response.message);
+                        window.location.href = "/blogs";
+                    },
+                    error: function(error) {
+                        console.error('Error submitting blog:', error);
+                        alert('Error submitting blog. Please try again later.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

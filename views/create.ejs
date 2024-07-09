@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craft Your Own Blog</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <%- include('header') %>
+    <div class="blogBox1">
+        <div>
+            <h2 class="crafting">Craft your own blog</h2>
+        </div>
+        
+        <div class="blogPost">
+            <form id="blogForm" action="/submit-blog" method="POST">
+                <input type="text" id="title" name="title" class="form-control" placeholder="Title" required>
+                <input type="text" id="overview" name="overview" class="form-control mt-3" placeholder="Your Name">
+                <input type="text" id="image" name="image" class="form-control mt-3" placeholder="Image URL">
+                <textarea id="blog" name="content" class="form-control large-input mt-3" placeholder="Unleash your creativity here..." required></textarea>
+                <div class="text mt-3">
+                    <button type="submit" class="btn-blog" id="establishBlogBtn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <%- include('footer') %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        document.getElementById('blogForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+        
+            // Fetch form data
+            const formData = {
+                title: document.getElementById('title').value,
+                overview: document.getElementById('overview').value,
+                image: document.getElementById('image').value,
+                content: document.getElementById('blog').value
+            };
+        
+            // Send POST request to server
+            fetch('/submit-blog', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // Display success message from server
+                // Optionally, clear form fields or update UI as needed
+                document.getElementById('title').value = '';
+                document.getElementById('overview').value = '';
+                document.getElementById('image').value = '';
+                document.getElementById('blog').value = '';
+            })
+            .catch(error => {
+                console.error('Error submitting blog:', error);
+                alert('Error submitting blog. Please try again later.');
+            });
+        });
+    </script>
+    
+</body>
+</html>
+
